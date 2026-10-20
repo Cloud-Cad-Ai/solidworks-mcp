@@ -1,0 +1,144 @@
+{
+  "title": "Casting transfer cell — conveyor to fixture",
+  "concept_id": "MC-EX-001",
+  "rev": "A",
+  "date": "2026-10-16",
+  "author": "concept agent",
+  "summary": "Single-axis belt gantry with a pneumatic guided Z and 4-cup vacuum gripper transfers 2 kg aluminium castings from the end of an infeed conveyor to a machining fixture 720 mm away, in a 4.4 s cycle against a 6 s requirement.",
+
+  "requirements": [
+    {"id": "R1", "text": "Throughput", "value": "≥ 600 parts/h (≤ 6.0 s cycle)", "source": "spec"},
+    {"id": "R2", "text": "Payload", "value": "Al casting 160×150×80 mm, 2.0 kg", "source": "spec"},
+    {"id": "R3", "text": "Transfer distance", "value": "720 mm (conveyor end → fixture)", "source": "spec"},
+    {"id": "R4", "text": "Place repeatability", "value": "±0.2 mm", "source": "spec"},
+    {"id": "R5", "text": "Max envelope", "value": "1500 × 1000 × 2000 mm", "source": "spec"},
+    {"id": "R6", "text": "Utilities", "value": "230 VAC 1ph; 6 bar air (5 bar min)", "source": "assumed"},
+    {"id": "R7", "text": "Duty", "value": "2 shifts, 5 days, 8 years", "source": "assumed"},
+    {"id": "R8", "text": "Pick/place heights", "value": "Conveyor top 850, fixture top 850 mm", "source": "derived"}
+  ],
+  "assumptions": [
+    "Operator access from the front (−Y); cell guarded by perimeter fence with interlocked door (not drawn).",
+    "Casting top face is machined/flat enough for bellows vacuum cups — to be confirmed on a real part.",
+    "Parts arrive singulated against a hard stop at the conveyor end (conveyor supplied by others).",
+    "Moving mass on X = 10 kg (carriage 3 + Z unit 4 + gripper 1 + part 2).",
+    "Air supply guaranteed ≥ 5 bar at the cell; sizing done at 5 bar."
+  ],
+
+  "morphology": [
+    {"function": "Grip part", "options": ["vacuum cups", "parallel pneumatic gripper", "magnetic (n/a: Al)"], "chosen": "vacuum cups"},
+    {"function": "Move horizontally 720 mm", "options": ["belt linear module", "ball-screw module", "rodless cylinder", "rotary swing arm", "SCARA"], "chosen": "belt linear module"},
+    {"function": "Lift / lower 200 mm", "options": ["guided pneumatic cylinder", "electric Z axis"], "chosen": "guided pneumatic cylinder"},
+    {"function": "Support", "options": ["welded steel frame", "aluminium profile frame"], "chosen": "welded steel frame"}
+  ],
+  "concepts": [
+    {"name": "A – Belt gantry + pneumatic Z", "description": "Overhead belt-driven linear module with servo, guided pneumatic cylinder for Z, 4-cup vacuum gripper. Frame straddles conveyor end and fixture.",
+     "pros": ["Simple, all catalogue modules", "Programmable X positions", "Fits envelope comfortably"], "cons": ["Two-position Z only", "Belt elasticity limits stiffness"]},
+    {"name": "B – SCARA robot", "description": "Floor-mounted 4-axis SCARA (≈ 600 mm reach) between conveyor and fixture with the same vacuum gripper.",
+     "pros": ["Fastest, most flexible", "Can re-orient part"], "cons": ["Highest cost", "Robot programming & safety integration"]},
+    {"name": "C – Pneumatic swing arm", "description": "180° rotary actuator with 360 mm arm and pneumatic Z; conveyor end and fixture placed on the swing circle.",
+     "pros": ["Lowest cost", "Very robust"], "cons": ["Forces fixture relocation", "Fixed positions, hard to change"]}
+  ],
+  "decision": {
+    "criteria": [
+      {"name": "Cost", "weight": 0.30},
+      {"name": "Cycle time", "weight": 0.15},
+      {"name": "Fits layout", "weight": 0.15},
+      {"name": "Flexibility", "weight": 0.15},
+      {"name": "Reliability", "weight": 0.15},
+      {"name": "Integration effort", "weight": 0.10}
+    ],
+    "scores": {
+      "A – Belt gantry + pneumatic Z": {"Cost": 4, "Cycle time": 4, "Fits layout": 4, "Flexibility": 4, "Reliability": 4, "Integration effort": 3},
+      "B – SCARA robot": {"Cost": 2, "Cycle time": 5, "Fits layout": 4, "Flexibility": 5, "Reliability": 4, "Integration effort": 4},
+      "C – Pneumatic swing arm": {"Cost": 5, "Cycle time": 4, "Fits layout": 2, "Flexibility": 1, "Reliability": 4, "Integration effort": 4}
+    }
+  },
+  "selected_concept": "A – Belt gantry + pneumatic Z",
+  "selection_rationale": "Highest weighted score; keeps existing conveyor/fixture positions at roughly half the cost of a SCARA.",
+
+  "sizing": [
+    {"item": "X move profile", "formula": "trapezoid 1/3: v = 1.5 s/t, a = 4.5 s/t²", "inputs": "s = 0.72 m, t = 0.9 s", "result": "v = 1.2 m/s, a = 4.0 m/s²", "selection": "—", "margin": "—"},
+    {"item": "X axial force", "formula": "F = m·a + μ·m·g", "inputs": "m = 10 kg, a = 4.0, μ = 0.01", "result": "F = 41 N", "selection": "—", "margin": "—"},
+    {"item": "X pulley torque & speed", "formula": "T = F·r/η ×1.2 (belt+pulley inertia); n = v/(2πr)", "inputs": "r = 0.0239 m (HTD5M 30T), η = 0.95", "result": "T = 1.25 N·m, n = 480 rpm", "selection": "—", "margin": "—"},
+    {"item": "X motor + gearbox", "formula": "T_m = T/(i·η_g), n_m = i·n", "inputs": "i = 3, η_g = 0.95", "result": "T_m = 0.44 N·m peak, 1440 rpm", "selection": "200 W AC servo (0.64 N·m cont / 1.9 peak) + 3:1 planetary", "margin": "1.45 on continuous, 4.3 on peak"},
+    {"item": "Belt tension", "formula": "F_eff ≤ allowable", "inputs": "F = 41 N, HTD5M 25 mm steel-cord", "result": "41 N ≪ ~500 N", "selection": "module std belt", "margin": "> 10"},
+    {"item": "Z cylinder", "formula": "F = m(g + a), load ratio ≤ 0.5", "inputs": "m = 4 kg, a = 3 m/s², 5 bar", "result": "F = 51 N → bore ≥ 16 mm", "selection": "Guided cylinder Ø20 × 200 (157 N @ 5 bar)", "margin": "load ratio 0.33"},
+    {"item": "Vacuum holding", "formula": "F = n·Δp·A ≥ SF·m(g + a)", "inputs": "4 × Ø30 bellows, Δp = 0.6 bar, SF = 4, a = 5 m/s²", "result": "170 N available vs 118 N req.", "selection": "4 × Ø30 bellows cup + venturi ejector", "margin": "1.44 over SF 4"},
+    {"item": "Cycle time", "formula": "Σ moves + dwells + 15 %", "inputs": "2×0.9 X, 4×0.4 Z, 2×0.2 vac", "result": "4.4 s", "selection": "—", "margin": "26 % under 6 s"}
+  ],
+
+  "envelope": {"size": [1500, 1000, 2000], "origin": [0, 0, 0]},
+
+  "geometry": [
+    {"id": "leg_fl", "name": "Leg front-left", "type": "box", "pos": [0, 0, 0], "size": [60, 60, 1700], "group": "frame", "item": 1},
+    {"id": "leg_fr", "name": "Leg front-right", "type": "box", "pos": [1240, 0, 0], "size": [60, 60, 1700], "group": "frame", "item": 1},
+    {"id": "leg_bl", "name": "Leg back-left", "type": "box", "pos": [0, 740, 0], "size": [60, 60, 1700], "group": "frame", "item": 1},
+    {"id": "leg_br", "name": "Leg back-right", "type": "box", "pos": [1240, 740, 0], "size": [60, 60, 1700], "group": "frame", "item": 1},
+    {"id": "beam_f", "name": "Top beam front", "type": "box", "pos": [0, 0, 1700], "size": [1300, 60, 80], "group": "frame", "item": 2},
+    {"id": "beam_b", "name": "Top beam back", "type": "box", "pos": [0, 740, 1700], "size": [1300, 60, 80], "group": "frame", "item": 2},
+    {"id": "cross_l", "name": "Cross beam left", "type": "box", "pos": [0, 60, 1700], "size": [60, 680, 80], "group": "frame", "item": 3},
+    {"id": "cross_r", "name": "Cross beam right", "type": "box", "pos": [1240, 60, 1700], "size": [60, 680, 80], "group": "frame", "item": 3},
+
+    {"id": "x_mod", "name": "X belt linear module", "type": "box", "pos": [0, 340, 1620], "size": [1300, 120, 80], "group": "motion", "item": 4},
+    {"id": "x_car", "name": "X carriage", "type": "box", "pos": [500, 330, 1570], "size": [200, 140, 50], "group": "motion", "item": 4},
+    {"id": "x_gb", "name": "Planetary gearbox 3:1", "type": "box", "pos": [1300, 360, 1620], "size": [70, 80, 80], "group": "transmission", "item": 6},
+    {"id": "x_mot", "name": "X servo 200 W", "type": "cyl", "axis": "x", "pos": [1370, 400, 1660], "r": 30, "length": 110, "group": "drive", "item": 5},
+
+    {"id": "z_body", "name": "Z guided cylinder body", "type": "box", "pos": [560, 360, 1270], "size": [80, 80, 300], "group": "pneumatic", "item": 7},
+    {"id": "z_rod_1", "name": "Z guide rod", "type": "cyl", "axis": "z", "pos": [580, 400, 1080], "r": 8, "length": 190, "group": "pneumatic", "item": 7},
+    {"id": "z_rod_2", "name": "Z guide rod", "type": "cyl", "axis": "z", "pos": [620, 400, 1080], "r": 8, "length": 190, "group": "pneumatic", "item": 7},
+    {"id": "grip_plate", "name": "Gripper plate", "type": "box", "pos": [540, 340, 1060], "size": [120, 120, 20], "group": "tooling", "item": 8},
+    {"id": "cup_1", "name": "Vacuum cup", "type": "cyl", "axis": "z", "pos": [570, 370, 1010], "r": 15, "length": 50, "group": "tooling", "item": 9},
+    {"id": "cup_2", "name": "Vacuum cup", "type": "cyl", "axis": "z", "pos": [630, 370, 1010], "r": 15, "length": 50, "group": "tooling", "item": 9},
+    {"id": "cup_3", "name": "Vacuum cup", "type": "cyl", "axis": "z", "pos": [570, 430, 1010], "r": 15, "length": 50, "group": "tooling", "item": 9},
+    {"id": "cup_4", "name": "Vacuum cup", "type": "cyl", "axis": "z", "pos": [630, 430, 1010], "r": 15, "length": 50, "group": "tooling", "item": 9},
+    {"id": "part_transit", "name": "Casting (in transit)", "type": "box", "pos": [520, 325, 930], "size": [160, 150, 80], "group": "payload", "item": 16},
+
+    {"id": "conv", "name": "Infeed conveyor (end)", "type": "box", "pos": [80, 250, 780], "size": [400, 300, 70], "group": "other", "item": 13},
+    {"id": "conv_leg1", "name": "Conveyor leg", "type": "box", "pos": [100, 380, 0], "size": [40, 40, 780], "group": "other", "item": 13},
+    {"id": "conv_leg2", "name": "Conveyor leg", "type": "box", "pos": [420, 380, 0], "size": [40, 40, 780], "group": "other", "item": 13},
+    {"id": "part_pick", "name": "Casting at pick", "type": "box", "pos": [200, 325, 850], "size": [160, 150, 80], "group": "payload", "item": 16, "color": "#9fd8bd"},
+
+    {"id": "fx_table", "name": "Fixture table", "type": "box", "pos": [800, 250, 0], "size": [400, 300, 800], "group": "frame", "item": 12},
+    {"id": "fx_nest", "name": "Fixture nest", "type": "box", "pos": [890, 310, 800], "size": [220, 180, 50], "group": "tooling", "item": 11}
+  ],
+  "motions": [
+    {"type": "linear", "from": [280, 400, 1500], "to": [1000, 400, 1500], "label": "X 720 mm @ 1.2 m/s"},
+    {"type": "linear", "from": [740, 400, 900], "to": [740, 400, 1100], "label": "Z 200 mm"}
+  ],
+
+  "bom": [
+    {"item": 1, "name": "Frame leg", "qty": 4, "spec": "SHS 60×60×3, 1700 long, S355", "make_buy": "make", "mass_kg": 8.8},
+    {"item": 2, "name": "Top beam", "qty": 2, "spec": "RHS 80×60×3, 1300 long", "make_buy": "make", "mass_kg": 8.0},
+    {"item": 3, "name": "Cross beam", "qty": 2, "spec": "RHS 80×60×3, 680 long", "make_buy": "make", "mass_kg": 4.2},
+    {"item": 4, "name": "Belt linear module", "qty": 1, "spec": "HTD5M belt, 1300 OAL, 900 stroke, 2 rails", "make_buy": "buy", "mass_kg": 14},
+    {"item": 5, "name": "AC servo motor", "qty": 1, "spec": "200 W, 60 flange, 0.64 N·m, with drive", "make_buy": "buy", "mass_kg": 1.0},
+    {"item": 6, "name": "Planetary gearbox", "qty": 1, "spec": "3:1, 60 frame, ≤ 15 arcmin", "make_buy": "buy", "mass_kg": 1.2},
+    {"item": 7, "name": "Guided pneumatic cylinder", "qty": 1, "spec": "Ø20 × 200 stroke, twin guide rods", "make_buy": "buy", "mass_kg": 2.6},
+    {"item": 8, "name": "Gripper plate", "qty": 1, "spec": "Al 6061, 120×120×20", "make_buy": "make", "mass_kg": 0.8},
+    {"item": 9, "name": "Vacuum cup", "qty": 4, "spec": "Ø30 bellows, NBR, M5 thread", "make_buy": "buy", "mass_kg": 0.02},
+    {"item": 10, "name": "Vacuum ejector + switch", "qty": 1, "spec": "Venturi, 0.6 bar, with blow-off", "make_buy": "buy", "not_drawn": true},
+    {"item": 11, "name": "Fixture nest", "qty": 1, "spec": "Locating pins + rest pads, part-specific", "make_buy": "make"},
+    {"item": 12, "name": "Fixture table", "qty": 1, "spec": "Existing / by others", "make_buy": "existing"},
+    {"item": 13, "name": "Infeed conveyor", "qty": 1, "spec": "By others, with end stop & part-present sensor", "make_buy": "existing"},
+    {"item": 14, "name": "Control cabinet", "qty": 1, "spec": "PLC, servo drive, safety relay; 600×400×200", "make_buy": "buy", "not_drawn": true},
+    {"item": 15, "name": "Perimeter guarding", "qty": 1, "spec": "Mesh fence, interlocked door", "make_buy": "buy", "not_drawn": true},
+    {"item": 16, "name": "Workpiece (reference)", "qty": 1, "spec": "Al casting 2.0 kg", "make_buy": "—", "notes": "Shown at pick and in transit"}
+  ],
+  "interfaces": [
+    {"name": "Pick datum", "type": "mechanical", "detail": "Part centre X 280, Y 400, top Z 930 at conveyor end stop"},
+    {"name": "Place datum", "type": "mechanical", "detail": "Fixture nest centre X 1000, Y 400, top Z 850"},
+    {"name": "Conveyor handshake", "type": "signal", "detail": "Part-present in, ready-for-next out (24 V DIO)"},
+    {"name": "Utilities", "type": "power/air", "detail": "230 VAC 1ph 10 A; 6 bar air, ~30 Nl/min avg"}
+  ],
+  "risks": [
+    {"risk": "Vacuum seal on as-cast surfaces", "mitigation": "Test on 10 real parts; fallback to pneumatic parallel gripper on cast flanges"},
+    {"risk": "Belt module stiffness for ±0.2 mm place", "mitigation": "Use fixture lead-in chamfers + compliant gripper; verify module repeatability spec"},
+    {"risk": "Z guided cylinder end-of-stroke impact", "mitigation": "Adjustable cushioning; flow controls; check ½mv² vs rating"}
+  ],
+  "next_steps": [
+    "Confirm pick/place datums and heights with the line layout",
+    "Get a real casting to test vacuum cups",
+    "Select module & servo vendor; detail frame in CAD from this geometry"
+  ]
+}
