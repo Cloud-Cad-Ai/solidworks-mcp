@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.cloudcadai/solidworks",
+  "title": "SolidWorks",
+  "description": "Local SolidWorks MCP server for Cursor, Claude, and Codex.",
+  "repository": {
+    "url": "https://github.com/cloudcadai/solidworks-mcp",
+    "source": "github"
+  },
+  "version": "0.0.3",
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/cloudcadai/solidworks-mcp/releases/download/v0.0.3/solidworks.mcpb",
+      "fileSha256": "<sha256 of the solidworks.mcpb asset on this release>",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

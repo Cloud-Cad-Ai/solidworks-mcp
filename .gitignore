@@ -1,0 +1,8 @@
+*.exe
+*.msi
+*.msp
+*.mcpb
+*.zip
+Thumbs.db
+Desktop.ini
+.DS_Store

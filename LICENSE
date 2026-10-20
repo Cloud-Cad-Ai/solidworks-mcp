@@ -1,0 +1,13 @@
+SolidWorks MCP Distribution License
+
+Copyright (c) 2026 Cad Workflow Manager
+
+This repository distributes the SolidWorks MCP server. It is a public distribution repository. The server source is not published here, and this license is not an open-source license.
+
+You may download the official GitHub Release of this repository and install and run that build on your own computers.
+
+You may copy the skill files under skills/ into the skill folders of Cursor, Claude, and Codex so those clients can use them with the installed server.
+
+No other rights are granted. The server implementation, the installer project, and the product repository stay with Cad Workflow Manager.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
