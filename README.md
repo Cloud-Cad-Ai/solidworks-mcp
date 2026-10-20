@@ -44,7 +44,7 @@ ChatGPT Work calls remote MCP. Use Codex on the PC where SolidWorks is open. Cli
 
 ## Install
 
-Download `CWMSolidWorksMCPSetup.exe` from the Releases page for this repository, and compare the published SHA-256 before you run it. Until the first release is attached, use a build supplied by Cad Workflow Manager.
+Download `CWMSolidWorksMCPSetup.exe` from the Releases page for this repository, and compare the published SHA-256 before you run it.
 
 The setup installs for the current user, under `%USERPROFILE%\CWM\SolidWorksMcp`. By default it registers Claude Desktop, Cursor, and Codex, and copies the companion skills into skill folders that already exist.
 
