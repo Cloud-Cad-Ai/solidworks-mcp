@@ -1,6 +1,6 @@
 # Companion skills
 
-These folders are copied from the SolidWorks MCP product. Edit them there, then run `Sync-DistributionRepo.ps1`. Do not edit them in this repository.
+These folders are copied from the SolidWorks MCP product when the setup is built. Edit them there. Do not edit them in this repository.
 
 | Skill | Description |
 |---|---|
