@@ -16,7 +16,9 @@ No. Install and upgrade are per-user, under `%USERPROFILE%\CWM\SolidWorksMcp`.
 
 ## What gets sent off this computer?
 
-The host does not add an account or its own telemetry. Tool traffic stays between the client and the local process. See [PRIVACY.md](PRIVACY.md).
+Startup contacts the license service with the Windows machine id. That id is shared by every account on the PC. The host also sends usage totals: versions, the MCP client name, the tool name, the outcome, the duration, and for `invoke` and `describe_api` the API member name. Prompts, file paths, model data, and tool arguments stay on the PC. See [PRIVACY.md](PRIVACY.md).
+
+The trial starts the first time the host runs. No card is required. When the trial ends, the host opens a payment page. In the last three days it can offer to add a card without stopping the tools. Reload the MCP client after you finish on that page.
 
 ## How do new skills show up here?
 

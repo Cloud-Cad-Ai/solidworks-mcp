@@ -2,7 +2,7 @@
 
 **Control SolidWorks with the AI assistant you already use.**
 
-Connect Claude Desktop, Cursor, or Codex to SolidWorks and automate supported modeling, inspection, and engineering tasks using natural language. The server runs on the same Windows PC as SolidWorks. You confirm a change before it touches the model.
+Connect Claude Desktop, Cursor, or Codex to SolidWorks and automate supported modeling, inspection, and engineering tasks using natural language. The server runs on the same Windows PC as SolidWorks. The installed write policy runs a change without a dialog. [Settings](#settings) shows how to require a Yes/No dialog before a write.
 
 **[Install SolidWorks MCP](INSTALLATION.md)** · **[See Daksh CWM](https://dakshcwm.com/)**
 
@@ -26,7 +26,7 @@ The `solidworks-bridge-tool-selection` skill records which calls work through th
 
 1. You ask Claude Desktop, Cursor, Codex, or Claude Code in ordinary language.
 2. The assistant calls the local server. One process keeps one session.
-3. A write shows a Yes/No dialog titled SolidWorks MCP. **No** leaves the model unchanged.
+3. With the installed write policy (`trusted`), a write runs without a dialog. Set `WritePolicy` to `approve` in [Settings](#settings) when you want a Yes/No dialog titled SolidWorks MCP. **No** leaves the model unchanged.
 4. The assistant reads that result, then continues. After a major feature it can capture the view and quote the feature names and mass from the tool result.
 
 Reads such as API lookup can run with SolidWorks closed. Modeling and inspection use the SolidWorks session on that PC.
@@ -52,6 +52,84 @@ You need Windows x64 and SolidWorks on that PC. The setup includes the runtime t
 
 Full steps, quiet-install switches, and how to remove the registration are in [INSTALLATION.md](INSTALLATION.md).
 
+## Settings
+
+The setup writes one configuration file beside the host:
+
+`%USERPROFILE%\CWM\SolidWorksMcp\appsettings.json`
+
+That folder is also `C:\Users\<your Windows user name>\CWM\SolidWorksMcp`, next to `CWM.SolidWorks.Mcp.Host.exe`.
+
+**Find it.** Open File Explorer and paste `%USERPROFILE%\CWM\SolidWorksMcp` into the address bar. The file in that folder is `appsettings.json`.
+
+**Change it.** Right-click `appsettings.json`, choose **Open with**, and pick Notepad (or another text editor). Change only the values in the tables below. Keep the braces, the quotes, and the commas. Save the file.
+
+The host reads the file when its process starts. After you save, reload MCP servers in Cursor, or restart Cursor. Restart Claude Desktop. Start a new Codex session so it launches the host again.
+
+The installed file is:
+
+```json
+{
+  "SessionCad": {
+    "AttachToRunningSolidWorks": true
+  },
+  "SolidWorksMcp": {
+    "WritePolicy": "trusted",
+    "ToolProfile": "full",
+    "MaxToolCalls": 0
+  }
+}
+```
+
+The copy on disk may include a `//` comment after `MaxToolCalls`. The host accepts that comment. You can delete it.
+
+A missing key uses the fallback in its table. A value the host does not recognize uses that same fallback.
+
+### Attach to SolidWorks
+
+`SessionCad` → `AttachToRunningSolidWorks`
+
+| Value | What happens |
+|---|---|
+| `true` | When the server starts, it attaches to a SolidWorks instance that is already running. This is the installed value. |
+| `false` | The server does not attach at startup. |
+
+If the key is missing, the host uses `false`.
+
+### Write policy
+
+`SolidWorksMcp` → `WritePolicy`
+
+| Value | What happens |
+|---|---|
+| `approve` | A write shows a Yes/No dialog titled SolidWorks MCP. **No** leaves the model unchanged. |
+| `read-only` | Write tools are refused. `readonly` is the same value. |
+| `trusted` | Write tools run without the dialog. This is the installed value. |
+
+If the value is empty or unrecognized, the host uses `approve`.
+
+### Tool list
+
+`SolidWorksMcp` → `ToolProfile`
+
+| Value | What happens |
+|---|---|
+| `full` | The client sees the full tool list. This is the installed value. |
+| `modeling` | Part modeling only. Drawings, sheet metal, assembly, BOM, export, and file admin stay hidden, and a call to one of them is refused. |
+
+If the value is empty or unrecognized, the host uses `full`. Cursor sends every enabled tool on each turn, so `modeling` is the switch that shrinks that list. A part-modeling prompt is in [EXAMPLES.md](EXAMPLES.md).
+
+### Tool-call limit
+
+`SolidWorksMcp` → `MaxToolCalls`
+
+| Value | What happens |
+|---|---|
+| `0` | No limit for that host process. This is the installed value. |
+| A positive whole number, for example `30` | That many tool calls run. The next call is refused. Start a new chat or reload the MCP server to reset the count. |
+
+A negative number is treated as `0`. A refused call does not count: a tool hidden by the profile, a `read-only` refusal, or **No** on the confirmation dialog.
+
 ## Try a prompt
 
 The server name in the client is `solidworks`.
@@ -66,7 +144,7 @@ The server name in the client is `solidworks`.
 
 > Look up the SolidWorks API member for this call and show the signature first.
 
-With the default write policy, the extrude, the save, and the export each wait for your Yes. `read-only` refuses writes. `trusted` skips the dialog. A part-modeling-only tool list is described in [EXAMPLES.md](EXAMPLES.md).
+The installed write policy is `trusted`, so the extrude, the save, and the export run without a dialog. `approve` waits for your Yes. `read-only` refuses writes. Change those values in [Settings](#settings). A part-modeling-only tool list is described in [EXAMPLES.md](EXAMPLES.md).
 
 ## Companion skills
 
@@ -76,7 +154,7 @@ The installer copies every published skill into Cursor, Codex, Claude Code, and 
 
 ## Your files stay on this PC
 
-The host runs on your PC, with no account and no telemetry of its own. Tool traffic stays between the assistant and the local process. Configuration is the `appsettings.json` beside the installed exe. What the server reads, what it writes, and what it leaves to SolidWorks is in [PRIVACY.md](PRIVACY.md).
+The host runs on your PC. Startup asks `https://www.cloudcadai.com/wp-json/cwm-mcp/v1` whether this install may run, and sends usage totals there. Tool traffic stays between the assistant and the local process. Configuration is the `appsettings.json` beside the installed exe. How to find and edit it is in [Settings](#settings). What leaves the PC is in [PRIVACY.md](PRIVACY.md).
 
 ## When the job has to run the same way every time
 

@@ -61,4 +61,9 @@ CWM.SolidWorks.Mcp.Host.exe --install-skill
 
 ## Remove
 
-Uninstall SolidWorks MCP from Windows settings. When a registration option was installed, uninstall removes that client entry.
+Uninstall SolidWorks MCP from Windows settings. That removes the program folder and, for each option that was installed:
+
+- the `solidworks` entry from Claude Desktop, Cursor, and Codex
+- each companion skill copied into Cursor, Codex, Claude Code, and Claude Desktop Cowork spaces, including the matching Cowork manifest entries
+
+Other skills and other MCP servers stay. A Claude Code server added with `claude mcp add` stays, because the setup does not write that entry.

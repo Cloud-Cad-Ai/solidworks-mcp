@@ -8,7 +8,7 @@ Ask the client to find a SolidWorks API member and show its signature before cal
 
 ## Change the open model
 
-Ask for one change, then read the tool result before the next change. A write tool uses the installed write policy. The default is `approve`: SolidWorks MCP shows a Yes/No dialog, and No does not run the tool.
+Ask for one change, then read the tool result before the next change. A write tool uses the installed write policy. That value is `trusted`: the tool runs without a dialog. Set `WritePolicy` to `approve` in [Settings](README.md#settings) when you want a Yes/No dialog. No does not run the tool.
 
 When several steps are already known, the client can send them together with `batch`. If the batch stops early, the next call continues from the failing step.
 
@@ -33,4 +33,4 @@ Cursor sends every enabled tool on each turn. Set `SolidWorksMcp:ToolProfile` to
 }
 ```
 
-`WritePolicy` accepts `approve`, `read-only`, and `trusted`. `MaxToolCalls` of `0` means no ceiling for that host process.
+`WritePolicy` accepts `approve`, `read-only`, and `trusted`. The installed value is `trusted`. `MaxToolCalls` of `0` means no ceiling for that host process. Where to find the file and how to edit each value is in [Settings](README.md#settings).
