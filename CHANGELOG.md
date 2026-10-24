@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.7
+
+- Installer `CWMSolidWorksMCPSetup.exe` for host 0.0.7.
+- Companion skills: `cad-design-orchestrator`, `concept-machine-visualizer`, `mechanical-reasoner`, `set-material`, `solidworks`, `solidworks-api`, `solidworks-assembly-build`, `solidworks-bridge-tool-selection`, `solidworks-macro-fallback`, `solidworks-motion-mates`, `solidworks-parametric-assembly-build`, `solidworks-procedure`.
 ## 0.0.6
 
 - Installer `CWMSolidWorksMCPSetup.exe` for host 0.0.6.
