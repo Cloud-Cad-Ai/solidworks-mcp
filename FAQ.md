@@ -32,4 +32,4 @@ Skills are added in the SolidWorks MCP product as `skill/<name>/SKILL.md`. The p
 
 ## Which version is this?
 
-The host version packaged today is `0.0.7`. The changelog in this repository tracks what each public release contains.
+The host version packaged today is `0.0.8`. The changelog in this repository tracks what each public release contains.
