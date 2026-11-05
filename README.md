@@ -4,7 +4,7 @@
 
 Connect Claude Desktop, Cursor, or Codex to SolidWorks and automate supported modeling, inspection, and engineering tasks using natural language. The server runs on the same Windows PC as SolidWorks. The installed write policy runs a change without a dialog. [Settings](#settings) shows how to require a Yes/No dialog before a write.
 
-**[Install SolidWorks MCP](INSTALLATION.md)** · **[See Daksh CWM](https://dakshcwm.com/)**
+   **[Install SolidWorks MCP](INSTALLATION.md)** · **[Product page, free trial and pricing](https://www.cloudcadai.com/product/solidworks-mcp/)** · **[See Daksh CWM](https://dakshcwm.com/)**
 
 SolidWorks MCP is a local MCP server. Your assistant starts one process, named `solidworks`, and talks to the open session in plain language. Companion skills tell that assistant which supported call to make.
 
@@ -48,7 +48,8 @@ Download `CWMSolidWorksMCPSetup.exe` from the Releases page for this repository,
 
 The setup installs for the current user, under `%USERPROFILE%\CWM\SolidWorksMcp`. By default it registers Claude Desktop, Cursor, and Codex, and copies the companion skills into skill folders that already exist.
 
-You need Windows x64 and SolidWorks on that PC. The setup includes the runtime the host needs.
+   The free trial starts the first time the host runs, with no card required. Pricing and plans are on the [SolidWorks MCP product page](https://www.cloudcadai.com/product/solidworks-mcp/).
+   
 
 Full steps, quiet-install switches, and how to remove the registration are in [INSTALLATION.md](INSTALLATION.md).
 
