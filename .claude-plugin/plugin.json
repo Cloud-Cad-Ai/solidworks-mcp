@@ -1,5 +1,5 @@
 {
   "name": "solidworks-mcp-skills",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "Companion skills for the SolidWorks MCP server (Cad Workflow Manager)."
 }

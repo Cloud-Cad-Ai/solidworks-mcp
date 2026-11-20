@@ -18,3 +18,11 @@ These skills are installed with SolidWorks MCP. They tell the assistant how to u
 | `solidworks-parametric-assembly-build` | Use when building a SolidWorks assembly from a spec that should be driven by one global-variables file, especially when sizes are placeholders pending inputs. |
 | `solidworks-procedure` | Create a procedure skill from this conversation. Use when the user says "Create a procedure skill named NAME from this conversation. |
 | `solidworks-sheet-metal-build` | Build native SolidWorks sheet-metal parts (base flange, edge flanges, corners, K-factor, flat pattern, DXF) through the SolidWorks MCP bridge, with a macro fallback for edge flanges. Use for any sheet-metal part (enclosure, bracket, tray, lid, cover, chassis) or when the user mentions bends, flanges, K-factor, bend radius, flat pattern or DXF. When memory_* tools are listed and this is a new part, save it, then follow the engineering-memory skill's New project section. |
+
+# Opt-in skills
+
+These skills are published in this folder. A PC receives one only when that feature is turned on. `--install-skill` does not copy them.
+
+| Skill | Description |
+|---|---|
+| `engineering-memory` | Use the SolidWorks MCP memory tools on every CAD task when memory_* tools are listed, including a new part or assembly from scratch. After the first save, call memory_overview so the new project is stored. Note only constraints, decisions, findings, and failed attempts. |

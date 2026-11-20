@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0
+
+- Installer `CWMSolidWorksMCPSetup.exe` for host 0.1.0.
+- Companion skills: `cad-design-orchestrator`, `concept-machine-visualizer`, `mechanical-reasoner`, `set-material`, `solidworks`, `solidworks-api`, `solidworks-assembly-build`, `solidworks-bridge-tool-selection`, `solidworks-hole-wizard`, `solidworks-macro-fallback`, `solidworks-motion-mates`, `solidworks-parametric-assembly-build`, `solidworks-procedure`, `solidworks-sheet-metal-build`.
+- Opt-in skills, published under `skills/` and copied onto a PC only when that feature is turned on: `engineering-memory`.
 ## 0.0.12
 
 - Installer `CWMSolidWorksMCPSetup.exe` for host 0.0.12.
@@ -31,4 +36,4 @@
 ## Unreleased
 
 - Public distribution repository for the SolidWorks MCP installer, release notes, and companion skills.
-- Skills published from the product: `cad-design-orchestrator`, `concept-machine-visualizer`, `mechanical-reasoner`, `set-material`, `solidworks`, `solidworks-api`, `solidworks-assembly-build`, `solidworks-bridge-tool-selection`, `solidworks-hole-wizard`, `solidworks-macro-fallback`, `solidworks-motion-mates`, `solidworks-parametric-assembly-build`, `solidworks-procedure`, `solidworks-sheet-metal-build`.
+- Skills published from the product: `cad-design-orchestrator`, `concept-machine-visualizer`, `mechanical-reasoner`, `set-material`, `solidworks`, `solidworks-api`, `solidworks-assembly-build`, `solidworks-bridge-tool-selection`, `solidworks-hole-wizard`, `solidworks-macro-fallback`, `solidworks-motion-mates`, `solidworks-parametric-assembly-build`, `solidworks-procedure`, `solidworks-sheet-metal-build`, `engineering-memory`.
