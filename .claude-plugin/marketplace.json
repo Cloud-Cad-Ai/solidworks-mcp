@@ -1,0 +1,33 @@
+{
+  "name": "solidworks-mcp",
+  "description": "Companion skills for the SolidWorks MCP server by Cad Workflow Manager.",
+  "owner": {
+    "name": "Cad Workflow Manager",
+    "url": "https://cloudcadai.com/"
+  },
+  "plugins": [
+    {
+      "name": "solidworks-mcp-skills",
+      "description": "Companion skills for the SolidWorks MCP server (Cad Workflow Manager).",
+      "version": "0.0.9",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cad-design-orchestrator",
+        "./skills/concept-machine-visualizer",
+        "./skills/mechanical-reasoner",
+        "./skills/set-material",
+        "./skills/solidworks",
+        "./skills/solidworks-api",
+        "./skills/solidworks-assembly-build",
+        "./skills/solidworks-bridge-tool-selection",
+        "./skills/solidworks-hole-wizard",
+        "./skills/solidworks-macro-fallback",
+        "./skills/solidworks-motion-mates",
+        "./skills/solidworks-parametric-assembly-build",
+        "./skills/solidworks-procedure",
+        "./skills/solidworks-sheet-metal-build"
+      ]
+    }
+  ]
+}
