@@ -1,11 +1,13 @@
 ---
 name: "solidworks-assembly-build"
-description: "Model parts and build SolidWorks assemblies from a design state or spec: frames, generated equations file, sub-assemblies in dependency order, static and moving mate schemes, and per-level checks. Use for any multi-part SolidWorks build, including moving mechanisms."
+description: "Model parts and build SolidWorks assemblies from a design state or spec: frames, generated equations file, sub-assemblies in dependency order, static and moving mate schemes, and per-level checks. Use for any multi-part SolidWorks build, including moving mechanisms. When memory_* tools are listed and this is a new part or assembly, save it, then follow the engineering-memory skill's New project section."
 ---
 
 # SolidWorks parts and assemblies: the build method
 
 This skill is the **method** (what to build, in what order, with which mate scheme). The exact calls that work through the bridge, and the ones that fail, are in `solidworks-bridge-tool-selection`; read it first. For a whole design job, `cad-design-orchestrator` plans the agents and the shared files; this skill is what its CAD agents follow.
+
+When `memory_*` tools are listed and this is a new part or assembly, save it, then follow the engineering-memory skill's New project section.
 
 ## 0. Gate on the inputs
 - Build from a settled design state (`design_state.json` or the spec): every dimension, material and position comes from it. Never invent a size.
@@ -32,8 +34,8 @@ Choose methods whose result can be predicted by hand, so a volume check can loca
 - **Repeated features**: one seed feature plus a pattern; expected change = n × one instance.
 - **Standard geometry** (involute tooth spaces, keyways, bolt circles, holes on a PCD): generate the sketch points or batch steps from the design state with a small script rather than placing them by hand; reuse the script across parts and jobs.
 - One feature per design intent, renamed after it (`Keyway_K3`, `CoverBolts_10xM6`), so a failing feature is identifiable by name.
-- After each feature: read volume and CG and compare with the expected change. After the part: no feature errors, volume within 0.5%, density check via mass ÷ volume, custom properties set, save, close.
-- One part per batch. Do not chain close/new across parts in one batch.
+- `mass_properties` is a step in the part batch. Compare volume and centre of gravity in the batch result. After the part: `feature_errors` in that batch, volume within 0.5%, density from mass ÷ volume, custom properties set, `save` with a full path as a step.
+- Do not put `CloseDoc` and `NewDocument` in the same batch. `CloseDoc` is the next call after you accept the batch result. `NewDocument` is its own call.
 - Overlapping features (bosses running into each other, a sliver left by a cut) are a design conflict: stop and report the proposed change so the design state and documents are updated, instead of quietly resizing in CAD.
 - Simplified stand-ins for purchased parts: list them with the interference they will cause, and replace them with supplier models when those arrive.
 

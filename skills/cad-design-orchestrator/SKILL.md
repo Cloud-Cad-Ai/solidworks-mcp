@@ -143,7 +143,7 @@ Each check is cheap compared with rebuilding a wrong design, and each one has a 
 **Check:** rebuild with no feature errors; volume within 0.5% of the hand value in `design_state`; CG on the expected side of each plane; mass ÷ volume equals the intended density.
 **Why it's worth it:** one call catches wrong-direction cuts, wrong dimensions, missing features, unit mix-ups and unassigned materials.
 **Finding what's wrong:**
-- Record volume and CG **after every feature**. The feature whose volume change differs from its expected change (area × depth; π/4·d²·L) is the culprit.
+- `mass_properties` is a step at the end of the part batch. Compare that volume and centre of gravity with the expected total. The feature whose volume change differs from its expected change (area × depth; π/4·d²·L) is the culprit. A per-feature volume read is a live call only when the next feature's arguments depend on it.
 - Read the error: about 2× or 0.5× is mid-plane vs one direction; far too much removed is a cut through the part the wrong way; zero change is a cut that missed (wrong side or offset); exactly 1000× is a unit mix-up.
 - CG moving the wrong way along an axis means the feature is on the wrong side of that plane: check the sketch-plane mapping in `bridge_facts`.
 - With feature errors, read the first erroring feature; later ones usually cascade from it.
@@ -155,7 +155,7 @@ Each check is cheap compared with rebuilding a wrong design, and each one has a 
 **Check:** every mate solved without error, and the component count equals `product_structure` for that level.
 **Why it's worth it:** a mate can "succeed" yet be unsolved, flipped or duplicated, and the geometry then looks plausible but is wrong.
 **Finding what's wrong:**
-- Check each mate's status **immediately after adding it**, before the next one. Found at once, a bad mate has one obvious cause; found after twenty more, it has twenty suspects.
+- Planned mates whose arguments are already known are one batch. A mate status check is a live call only when a bad status means the next mate must not be sent.
 - Sweep all mates and report each failing one by name with its decoded error (ill-defined usually means a wrong alignment option; over-defined means a redundant or conflicting mate), and the two entities it joins.
 - Distance mates can solve to the wrong side with no error: confirm locations with a view or section.
 - More mates than planned, or numbering jumps, mean duplicates from a retried call that had actually run. Confirm before deleting.
@@ -182,7 +182,7 @@ Each check is cheap compared with rebuilding a wrong design, and each one has a 
 
 ## 7. Token hygiene inside every agent (put a line about this in each brief)
 - Ask tools for compact output (pass/fail plus key numbers), not echoes of every handle or step.
-- Batch steps that are already known; verify once per group, except volume and mate status, which are cheap enough per feature or per mate.
+- Pack every allowed step whose arguments you can write now into one batch, including `$n` and a trailing `mass_properties` or `feature_errors`. Do not split the batch to read a value the next step does not use. Do not put `CloseDoc` and `NewDocument` in the same batch. At most 32 steps.
 - Generate many similar parts or features from `design_state.json` with one script where the user allows local scripts.
 - Prefer small or cropped screenshots, only after a major step or for a diagnosis.
 - Write long documents from generator scripts on disk; edit small sections instead of re-pasting.

@@ -1,11 +1,13 @@
 ---
 name: "solidworks-sheet-metal-build"
-description: "Build native SolidWorks sheet-metal parts (base flange, edge flanges, corners, K-factor, flat pattern, DXF) through the SolidWorks MCP bridge, with a macro fallback for edge flanges. Use for any sheet-metal part (enclosure, bracket, tray, lid, cover, chassis) or when the user mentions bends, flanges, K-factor, bend radius, flat pattern or DXF."
+description: "Build native SolidWorks sheet-metal parts (base flange, edge flanges, corners, K-factor, flat pattern, DXF) through the SolidWorks MCP bridge, with a macro fallback for edge flanges. Use for any sheet-metal part (enclosure, bracket, tray, lid, cover, chassis) or when the user mentions bends, flanges, K-factor, bend radius, flat pattern or DXF. When memory_* tools are listed and this is a new part, save it, then follow the engineering-memory skill's New project section."
 ---
 
 # Sheet metal through the MCP bridge
 
 Read `solidworks-bridge-tool-selection` for general bridge rules and `solidworks-macro-fallback` for running macros. Lengths are metres, angles radians. Proven on SOLIDWORKS 2026.
+
+When `memory_*` tools are listed and this is a new part, save it, then follow the engineering-memory skill's New project section.
 
 ## 1. Agree the spec before modelling
 
@@ -33,7 +35,7 @@ Edge flanges need edge and sketch objects, which the bridge cannot pass. Ask for
 
 ## 4. Flat-pattern trap
 
-Any flat read (`sheet_metal_info`, `export_dxf`, cut-list box) unsuppresses Flat-Pattern1 and leaves the part flattened. Features added after that land after Flat-Pattern1 and produce nothing. Straight after every flat read, select `Flat-Pattern1` (`BODYFEATURE`), call `EditSuppress2`, and check that the mass and box match the folded part.
+Any flat read (`sheet_metal_info`, `export_dxf`, cut-list box) unsuppresses Flat-Pattern1 and leaves the part flattened. Features added after that land after Flat-Pattern1 and produce nothing. Straight after every flat read, select `Flat-Pattern1` (`BODYFEATURE`), call `EditSuppress2`, and check that the mass and box match the folded part. `model` suppress of the name `Flat-Pattern1` is the alternative.
 
 ## 5. Verify every feature
 
@@ -47,5 +49,5 @@ Any flat read (`sheet_metal_info`, `export_dxf`, cut-list box) unsuppresses Flat
 
 - Save after each verified feature. If a delete or recreate goes wrong (orphan sketches, dead tree), close without saving and reopen the last good save. Do not repair.
 - Feature and sketch names keep counting after deletes. Re-read the tree before you select by name.
-- In a batch, `$n` inside a JSON-string argument list is not substituted. Use literal handle ids.
+- `$n` inside an `invoke` arguments JSON array is substituted. Use `$n`. Do not call `invoke` to read a handle you can name as `$n`.
 - Macros: write one job per macro, keep them in the project `Macros` folder, and re-read the model after each run. Tell the user which macro to edit and re-run when a driving dimension (t, Ri, K, flange length) changes.

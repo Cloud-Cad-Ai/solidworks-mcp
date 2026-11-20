@@ -1,6 +1,6 @@
 ---
 name: "solidworks-macro-fallback"
-description: "Use when a SolidWorks API call through the MCP bridge needs a ref/out parameter or a COM object argument (limit mates, gear mates, AddMate5, ModifyDefinition), and only after the user has agreed to macros being used."
+description: "Use when a SolidWorks API call through the MCP bridge needs a COM object argument (limit mates, gear mates, ModifyDefinition), and only after the user has agreed to macros being used. Ref and out values come back beside the invoke result."
 ---
 
 # Macro fallback for calls the bridge cannot make
@@ -37,8 +37,8 @@ End Sub
 4. **Verify, never assume.** A RunMacro call that reported an error or "RPC server unavailable" may still have run: re-read the mate list before running it again, or you create duplicates. Then read the result: doc FeatureByName("LimitDistance1") → GetSpecificFeature2 → get_property MinimumVariation / MaximumVariation (offsets from nominal, metres), and check the mate's error code.
 
 ## Use the macro route for (with the user's agreement)
-- Limit, gear and other advanced mates; any AddMate5 / AddDistanceMate need.
-- Anything needing out parameters or object arguments.
+- Limit and gear mates that still need a COM object argument. AddMate5's ref error status comes back in `WrittenBack`; that call was not re-checked on a live session.
+- COM object arguments the bridge still cannot pass. Not for ref or out values: `invoke` returns those beside the result, including `GetEquationParameters2`.
 
 Not for routine work the bridge can already do: a macro saves round trips but hides failures, and its values are not linked to the design state.
 

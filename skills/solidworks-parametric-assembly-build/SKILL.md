@@ -22,7 +22,7 @@ Read the solidworks-bridge-tool-selection skill first for the exact calls.
 - Lugs and eyes: CreateSketchSlot centred on the pin at the origin, mid-plane extrude; extra plates on an offset ref plane; bore cut through all.
 - Boxes: corner rectangle at origin.
 - Pins and bearings: mid-plane extrude so they are symmetric about the eye.
-- Then link the file (FilePath, LinkToFile, UpdateValuesFromExternalEquationFile) and Add2 one equation per driving dim. Rebuild, feature_errors, mass_properties check, set properties, save_as, CloseDoc.
+- The open part's features, equations, `rebuild`, `feature_errors`, `mass_properties`, and `save` with a full path are one batch. Then `CloseDoc`. Then `NewDocument`. Then `set_units`. `save_as` is not a batch step. Link the file (FilePath, LinkToFile, UpdateValuesFromExternalEquationFile) and Add2 one equation per driving dim inside that batch.
 - Record each part's frame (which part axis is the main axis) in the README; mates depend on it.
 
 ## 4. Assembly

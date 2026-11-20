@@ -9,12 +9,7 @@ Works on the active part document. Assemblies are not covered: material is set o
 
 ## Steps
 
-1. `active_document` → keep `{handle}`. Continue only if `TypeName` is `IPartDoc`; otherwise stop and ask the user to open or activate the part.
-2. `invoke` handle=`{handle}` method=`SetMaterialPropertyName2` arguments=`["", "SOLIDWORKS Materials", "{material}"]`
-   - `""` targets the active configuration.
-   - `"SOLIDWORKS Materials"` is the library database name; spell it exactly.
-   - `{material}` must be the exact library name, so map the user's words (or a standard designation) to it. See the table below.
-   - `ok: true` with `value: null` is the normal return — **including when the name was not found**. The call never reports a bad name, so the check is mandatory.
+`model` change action `material`, with the exact library name from the table. The change read-back is the name that landed; a missing name fails silently, so stop when the read-back is not that name.
 
 ## Mapping names
 The library uses its own names, which differ from EN/DIN/ISO designations. Names that failed silently in a real run, and the library names that worked:
@@ -31,8 +26,7 @@ Libraries differ between installs, so treat this as a starting point. When the e
 
 ## Check
 
-Run `extract_part_data` and confirm its `Material` field equals `{material}` (confirmed working: it returned `"Material": "Plain Carbon Steel"`).
-Backup: `mass_properties`, then Mass ÷ Volume should equal the material's density (Plain Carbon Steel: 7,800 kg/m³; alloy steels about 7,850; grey cast iron about 7,200). A density of 1,000 kg/m³ means no material was applied.
+When the body must be judged, `mass_properties`: Mass ÷ Volume should equal the material's density (Plain Carbon Steel: 7,800 kg/m³; alloy steels about 7,850; grey cast iron about 7,200). A density of 1,000 kg/m³ means no material was applied.
 
 If the check fails, stop and name the step that failed, then try the nearest library name. Do not search the API.
 

@@ -26,13 +26,15 @@ Enum values, argument arrays, thread and fit tables: [references/hole-data.md](r
 
 ## 2. Procedure (per hole group)
 
+When the ray point and the `HoleWizard5` argument array are already chosen, steps 1–4 whose coordinates are known are one `batch`. `$n` is a handle from an earlier step, including inside an `invoke` arguments JSON array. Read `GetDefinition` and the read-back properties in that same batch. The next hole group is the next batch. `set_custom_properties`, `save_as`, `set_units`, and `create_directory` stay single calls.
+
 1. **Handles.** `active_document`, then `get_property` for `Extension` and `FeatureManager`. Re-read them after any `ActivateDoc` or error.
 2. **Pick the face with a ray** at the first hole centre, aimed from outside the part: `Extension.SelectByRay(x,y,z, dx,dy,dz, 0.0005, 2, false, 0, 0)`. `SelectByID2` picks on edges and corners are unreliable.
 3. **Call `HoleWizard5`** on the FeatureManager with the argument array from the reference. A non-null feature means success.
-4. **Add the other centres in the position sketch.** Several ray picks on one face collapse into one location. Instead: `feature.GetFirstSubFeature()` gives the sketch. Call `Select2(false,0)`, then doc `EditSketch`. On the SketchManager, set `AddToDB = true`, call `CreatePoint(x,y,0)` for each extra centre, then set `AddToDB = false`. Finish with `InsertSketch(true)` and `EditRebuild3`. Sketch axes depend on the face; on a face parallel to Top they are x = model X and y = −model Z. Confirm with one point before adding the rest.
-5. **Name the feature like the callout**, for example `M6x1.0-6H Tapped Dp12, Dia5 Dp18` or `4x Dia15 THRU - M14 Close Clearance`.
-6. **Verify** (section 3) before the next group.
-7. **Metadata.** Call `set_custom_properties` on its own, not in a batch, with one key per group, for example `Holes_A1-A4 = "4x M6x1.0-6H THRU, Tap Drill Dia5.0 THRU"`. Then `save("")`.
+4. **Add the other centres in the position sketch.** Several ray picks on one face collapse into one location. Instead: `feature.GetFirstSubFeature()` gives the sketch. Call `Select2(false,0)`, then doc `EditSketch`. On the SketchManager, set `AddToDB = true`, call `CreatePoint(x,y,0)` for each extra centre, then set `AddToDB = false`. Finish with `InsertSketch(true)` and `EditRebuild3`. Sketch axes depend on the face; on a face parallel to Top they are x = model X and y = −model Z. If the sketch axes are already known, the `CreatePoint` calls are steps in the same batch. A live point comes first only when a coordinate depends on a point you have not read.
+5. **Name the feature like the callout**, for example `M6x1.0-6H Tapped Dp12, Dia5 Dp18` or `4x Dia15 THRU - M14 Close Clearance`. When the name is already chosen, that rename is a step in the same batch.
+6. **Read-back** (section 3) is steps in this batch. The next hole group is the next batch.
+7. **Metadata.** `set_custom_properties` is its own call, with one key per group, for example `Holes_A1-A4 = "4x M6x1.0-6H THRU, Tap Drill Dia5.0 THRU"`. Then `save("")`.
 
 ## 3. Verify every hole group
 
@@ -52,7 +54,7 @@ Enum values, argument arrays, thread and fit tables: [references/hole-data.md](r
 - `SSize` must match the standard table exactly (`M6x1.0`, `Ø15.0`; Ø is U+00D8).
 - H7 and other tolerances are not applied by Hole Wizard: they need a dimension object, which the bridge cannot pass. Put the tolerance in the feature name and custom properties, and list it as an open item for the drawing. Use `solidworks-macro-fallback` only if the user agrees.
 - `EditUndo2` can undo creations you did not intend, and names shift. Re-read the feature tree after every undo.
-- When replacing old cut-holes, `DeleteSelection2(1)` can leave sketches and reference planes behind. Delete them by name (`FeatureByName`, `Select2`, `EditDelete`), then check the volume is back to the un-holed value.
+- When replacing old cut-holes, `DeleteSelection2(1)` can leave sketches and reference planes behind. Delete those named leftovers with `model` delete, then check the volume is back to the un-holed value.
 - Not allowed inside a batch: `create_directory`, `set_custom_properties`, `save_as`, `set_units`.
 
 ## 5. Report to the user
